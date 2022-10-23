@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+
+  launchpad:
+    image: unjxde/launchpad:latest
+    container_name: launchpad
+    restart: unless-stopped
+    build: ./
+    environment:
+      # https://docs.linuxserver.io/general/understanding-puid-and-pgid
+      - PUID=1000
+      - PGID=1000
+      # can be multiple hosts, comma separated, no spaces
+      - ALLOWED_HOSTS=https://home.example.com
+      # available log-levels: trace,debug,info,warn,error,fatal,panic
+      - LOG_LEVEL=info
+      # create account here to get free key:
+      # https://home.openweathermap.org/users/sign_up
+      # remove to disable weather
+      - OPEN_WEATHER_KEY=thisIsNoFunctioningKey
+      # standard, metric or imperial
+      - OPEN_WEATHER_UNITS=metric
+      # https://openweathermap.org/current#multi
+      - OPEN_WEATHER_LANG=en
+      # location is needed for weather
+      - LOCATION_LATITUDE=48.644929601442485
+      - LOCATION_LONGITUDE=9.349618464869025
+      # live system graph can be turned off
+      - LIVE_SYSTEM=true
+      # If you want to protect the dashboard with authentication
+      # provide a password and a secret.
+      # The secret will be randomly generated if not provided
+      - AUTH_PASSWORD=SuperSecurePassword
+      - AUTH_SECRET=SuperSecureSecret
+      - USER=admin
+    volumes:
+      # to mount the bookmarks.json and the icons folder on the system
+      - ./storage:/app/storage
+    ports:
+      - "127.0.0.1:4000:4000"
